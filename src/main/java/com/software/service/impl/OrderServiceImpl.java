@@ -28,7 +28,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setState(0);
         order.setDeliver(0);
         if(this.save(order)) {
-            return new Response<>().setCode(200).setMsg("ok").setData(order);
+            return new Response<>().setCode(200).setMsg("OK").setData(order);
         }else {
             return new Response<>().setCode(500).setMsg("server internal error");
         }
@@ -95,7 +95,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
         //支付--省略其他操作
         order.setState(1);
-        //发货--未发货、已发货---省略其他操作
+        //发货--未发货、待发货---省略其他操作
         order.setDeliver(1);
         updateById(order);
         return new Response<>().setCode(200).setMsg("OK");
