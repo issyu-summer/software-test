@@ -19,10 +19,14 @@ import java.util.UUID;
  */
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
+
     @Override
     public Object createOrder(OrderVo orderVo) {
         String orderSn= UUID.randomUUID().toString();
         Order order=new Order(orderVo,orderSn);
+        //未支付--未发货
+        order.setState(0);
+        order.setDeliver(0);
         if(this.save(order)) {
             return new Response<>().setCode(200).setMsg("ok").setData(order);
         }else {
@@ -76,4 +80,26 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
         return new Response<>().setCode(200).setMsg("OK").setData(list);
     }
+
+    @Override
+    public Object payOrder(Long id) {
+        //检查订单是否存在
+        Order order = getById(id);
+        if(order==null){
+            return new Response<>().setCode(404).setMsg("not found");
+        }
+        //检查订单状态--未支付、已支付、禁止
+        Integer state = order.getState();
+        if(state!=0){
+            return new Response<>().setCode(502).setMsg("order payed");
+        }
+        //支付--省略其他操作
+        order.setState(1);
+        //发货--未发货、已发货---省略其他操作
+        order.setDeliver(1);
+        updateById(order);
+        return new Response<>().setCode(200).setMsg("OK");
+    }
+
+
 }

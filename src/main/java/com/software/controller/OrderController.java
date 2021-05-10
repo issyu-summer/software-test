@@ -35,17 +35,35 @@ public class OrderController {
     }
 
 
+    /**
+     *修改订单
+     */
     @PutMapping("{id}")
     public Object modifyOrder(@PathVariable Long id, @RequestBody OrderVo orderVo){
         return orderService.modifyOrder(id,orderVo);
     }
 
+    /**
+     * 查询单个订单
+     */
     @GetMapping("{id}")
     public Object getOrder(@PathVariable Long id){
         return orderService.getOrder(id);
     }
+
+    /**
+     * 查询全部订单
+     */
     @GetMapping("/all")
     public Object getOrders(){
         return orderService.getOrders();
+    }
+
+    /**
+     * 订单支付
+     */
+    @PostMapping("/{id}/pay")
+    public Object payOrder(@PathVariable Long id){
+        return orderService.payOrder(id);
     }
 }

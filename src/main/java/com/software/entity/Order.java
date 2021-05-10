@@ -29,11 +29,14 @@ public class Order {
     private Integer price;
     @TableField("description")
     private String description;
+    @TableField("state")
+    private Integer state;
+    @TableField("deliver")
+    private Integer deliver;
 
     public Order(OrderVo orderVo,String orderSn){
         this.orderSn=orderSn;
         this.price= orderVo.getPrice();
         this.description=orderVo.getDescription();
     }
-
 }

@@ -46,4 +46,11 @@ public interface OrderService extends IService<Order> {
      * @return get orders response
      */
     Object getOrders();
+
+    /**
+     * 支付订单
+     * @param id order id
+     * @return pay order response
+     */
+    Object payOrder(Long id);
 }
