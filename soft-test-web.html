@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!--先启动服务、然后在浏览器打开-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>order module</title>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+</head>
+<body>
+<div id="box"
+     style="text-align: center;">
+    <label style="font-size: 20px">{{title}}</label><br/>
+    <hr/>
+    <div style="margin-top: 20px;">
+       <label style="width: 120px;display: inline-block">订单价格:</label>
+       <input v-model="c_orderVo.price"
+             style="margin-left: 20px;margin-top: 20px">
+
+        <br>
+        <label style="width: 120px;display: inline-block">订单描述信息:</label>
+        <input v-model="c_orderVo.description"
+               style="margin-left: 20px;margin-top: 20px">
+
+        <br>
+        <input type="button" @click="createOrder()" value="创建订单"
+               style="margin-top: 20px;"><br/>
+        <label>{{c_msg}}</label><br/>
+    </div>
+    <hr/>
+    <div style="margin-top: 20px">
+        <label style="width: 120px;display: inline-block">
+            订单id:
+        </label><input v-model="orderId" style="margin-left: 20px"><br>
+        <input type="button" @click="getOrder()" value="查询单个订单"
+               style="margin-top: 20px;"><br/>
+        <label>{{order}}</label><br/>
+    </div>
+    <hr/>
+    <div>
+        <input type="button" @click="getAllOrder()" value="查询所有订单"
+               style="margin-top: 20px;"><br/>
+        <ol>
+            <li v-for="order in orders" :key="order.id">
+                {{order}}
+            </li>
+        </ol>
+    </div>
+    <hr/>
+    <div style="margin-top: 20px">
+        <label style="width: 120px;display: inline-block">
+            订单id:
+        </label><input v-model="orderId" style="margin-left: 20px"><br>
+        <input type="button" @click="deleteOrder()" value="删除单个订单"
+               style="margin-top: 20px;"><br/>
+        <label>{{d_msg}}</label><br/>
+    </div>
+    <hr/>
+    <div style="margin-top: 20px">
+        <label style="width: 120px;display: inline-block">
+            订单id:
+        </label><input v-model="orderId"
+                       style="margin-left: 20px;"><br>
+        <label style="width: 120px;display: inline-block">
+            订单价格:
+        </label><input v-model="p_orderVo.price"
+                       style="margin-left: 20px;margin-top: 20px"><br>
+        <label style="width: 120px;display: inline-block">
+            订单描述信息:
+        </label><input v-model="p_orderVo.description"
+                       style="margin-left: 20px;margin-top: 20px"><br>
+        <input type="button" @click="putOrder()" value="修改订单"
+               style="margin-top: 20px;"><br/>
+        <label>{{p_msg}}</label><br/>
+    </div>
+
+</div>
+<script type="text/javascript">
+    window.onload=function (){
+        let url = 'http://localhost:8080/order/';
+        let vm = new Vue({
+            el: '#box',
+            data:{
+                title:'软件测试订单demo',
+                order:'',
+                orders:[],
+                orderId:'',
+                d_msg:'',
+                p_msg:'',
+                c_msg:'',
+                p_orderVo:{
+                    price:'',
+                    description:''
+                },
+                c_orderVo:{
+                    price:'',
+                    description:''
+                }
+            },
+            methods: {
+                createOrder:function (){
+                    this.$http.post(url,this.c_orderVo).then(function (res){
+                        this.c_msg=res.body.data;
+                    })
+                },
+                getOrder: function () {
+                    this.$http.get(url+this.orderId).then(function (res){
+                        if(res.body.data!=null){
+                            this.order=res.body.data;
+                        }else{
+                            this.order=res.body;
+                        }
+                    },function(){
+                        console.log('请求失败处理');
+                    })
+                },
+                getAllOrder:function (){
+                    this.$http.get(url+'all').then(function (res){
+                        this.orders=res.body.data;
+                    })
+                },
+                deleteOrder:function () {
+                    this.$http.delete(url+this.orderId).then(function (res){
+                        this.d_msg=res.body;
+                    })
+                },
+                putOrder:function (){
+                    this.$http.put(url+this.orderId,this.p_orderVo).then(function (res){
+                        this.p_msg=res.body;
+                    })
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
